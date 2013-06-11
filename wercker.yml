@@ -1,0 +1,25 @@
+box: wercker/php
+services:
+  - wercker/mysql
+build:
+  steps:
+    - create-file:
+        name: generate staging robots.txt
+        filename: config-replace.sed
+        content: |-
+          s/yourdbnamehere/${WERCKER_MYSQL_DATABASE}/g
+          s/yourusernamehere/${WERCKER_MYSQL_USERNAME}/g
+          s/yourpasswordhere/${WERCKER_MYSQL_PASSWORD}/g
+          s/localhost/${WERCKER_MYSQL_HOST}/g
+    - script:
+        name: wp-config.php
+        code: |-
+          replace_pattern=config-replace.sed
+          in_file=wp-tests-config-sample.php
+          out_file=wp-tests-config.php
+          sed -f "${replace_pattern}" "${in_file}" > "${out_file}"
+          echo "${out_file} content:"
+          cat "${out_file}"
+    - script:
+        name: run phpunit
+        code: phpunit
