@@ -4,8 +4,16 @@ services:
 build:
   steps:
     - script:
+        name: Install mysql package
+        code: |-
+          sudo apt-get update
+          sudo apt-get install php5-mysql -q -y
+    - script:
         name: print php info
         code: echo "<?php phpinfo(); ?>" | php
+    - script:
+        name: php ini's
+        code: php --ini
     - create-file:
         name: generate staging robots.txt
         filename: config-replace.sed
