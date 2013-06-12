@@ -28,4 +28,4 @@ build:
           cat "${out_file}"
     - script:
         name: run phpunit
-        code: phpunit --process-isolation
+        code: phpunit --verbose --converage-html
